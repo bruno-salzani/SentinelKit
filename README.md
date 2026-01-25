@@ -1,4 +1,4 @@
-# fsociety — Cyber‑Security Learning Toolkit
+# SentinelKit — Cyber‑Security Learning Toolkit
 
 A practical toolkit to explore device, network, and user‑environment information on Windows, with a focus on ethical, consent‑based security learning. It includes local remote‑desktop demos, SSH/SFTP browsing, router interrogation tools, system and network scanners, and structured result outputs.
 
