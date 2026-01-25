@@ -1,0 +1,12 @@
+opencv-python
+pyautogui
+pynput
+psutil
+requests
+paramiko
+numpy
+Pillow
+mss
+pyinstaller
+selenium
+pywin32
