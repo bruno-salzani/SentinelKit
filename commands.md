@@ -190,3 +190,84 @@ python src/scripts/ssh_file_browser.py --auto --enable-ssh
   ```
   python src/scripts/launch_session.py
   ```
+
+## Interactive Menu
+
+Launch the unified menu to access all tools:
+```bash
+python src/main.py
+```
+
+## New Tools
+
+### Port Scanner (`port_scanner.py`)
+Scan common ports or 1–1024 on a target:
+```bash
+python src/scripts/port_scanner.py <TARGET_IP> --mode common
+python src/scripts/port_scanner.py <TARGET_IP> --mode all
+```
+
+### System Monitor Dashboard (`system_monitor.py`)
+Terminal dashboard showing CPU, RAM and Disk usage (refresh every second). Press Q to quit:
+```bash
+python src/scripts/system_monitor.py
+```
+
+### Audio Recorder (`audio_recorder.py`)
+Record microphone audio until you press Q and save to WAV:
+```bash
+python src/scripts/audio_recorder.py
+```
+
+### Camera Snapshots (extra)
+Inside the camera viewer, press S to save a snapshot to `results/camera_captures`.
+
+### WiFi Networks Scanner (`wifi_scan.py`)
+List nearby WiFi networks (Windows):
+```bash
+python src/scripts/wifi_scan.py
+```
+
+### Process Top Viewer (`process_monitor.py`)
+Show top processes by CPU and memory, refresh each second, press Q to quit:
+```bash
+python src/scripts/process_monitor.py
+```
+
+### Screenshot Capture (`screenshot.py`)
+Capture the current screen and save to `results/screenshots`:
+```bash
+python src/scripts/screenshot.py
+```
+
+### Clipboard Dump (`clipboard_dump.py`)
+Dump clipboard text to `results/clipboard`:
+```bash
+python src/scripts/clipboard_dump.py
+```
+
+### DNS Cache Dump (`dns_cache_dump.py`)
+Export local DNS cache to `results/dns_cache_*.json`:
+```bash
+python src/scripts/dns_cache_dump.py
+```
+
+### LAN Ping Sweep (`ping_sweep.py`)
+Scan a /24 subnet for alive hosts. Auto-detects local subnet if not provided:
+```bash
+python src/scripts/ping_sweep.py              # auto subnet
+python src/scripts/ping_sweep.py 192.168.1    # specific base
+```
+
+### Banner Grabber (`banner_grabber.py`)
+Grab service banners from ports:
+```bash
+python src/scripts/banner_grabber.py <HOST> 80,22,25
+```
+
+### System Monitor Logger (`system_monitor_log.py`)
+Log CPU and memory to CSV every second. Optional duration in seconds:
+```bash
+python src/scripts/system_monitor_log.py
+python src/scripts/system_monitor_log.py 120
+```

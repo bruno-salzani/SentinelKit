@@ -1,5 +1,7 @@
 import cv2
 import sys
+import os
+from datetime import datetime
 
 def list_cameras(limit=10):
     """
@@ -41,15 +43,36 @@ def main():
         print("Invalid input.")
         return
 
-    print(f"Accessing camera {camera_index}... Press 'q' to quit.")
+    print(f"Accessing camera {camera_index}...")
+    print("Controls:")
+    print("  [S] Save Snapshot")
+    print("  [Q] Quit")
+    
     cap = cv2.VideoCapture(camera_index)
+    
+    # Ensure results directory exists
+    # If running from src/scripts, go up to project root
+    cur_dir = os.path.dirname(os.path.abspath(__file__))
+    root_dir = os.path.dirname(os.path.dirname(cur_dir))
+    save_dir = os.path.join(root_dir, "results", "camera_captures")
+    os.makedirs(save_dir, exist_ok=True)
 
     while True:
         ret, frame = cap.read()
         if ret:
             cv2.imshow('Camera', frame)
-            if cv2.waitKey(1) & 0xFF == ord('q'):
+            
+            key = cv2.waitKey(1) & 0xFF
+            
+            if key == ord('q'):
                 break
+            elif key == ord('s'):
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                filename = f"cam_{camera_index}_{timestamp}.png"
+                filepath = os.path.join(save_dir, filename)
+                cv2.imwrite(filepath, frame)
+                print(f"[+] Snapshot saved: {filepath}")
+                
         else:
             print("Failed to grab frame.")
             break

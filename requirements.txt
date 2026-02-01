@@ -10,3 +10,4 @@ mss
 pyinstaller
 selenium
 pywin32
+sounddevice

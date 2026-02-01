@@ -9,6 +9,10 @@ A practical toolkit to explore device, network, and user‑environment informati
   ```bash
   pip install -r requirements.txt
   ```
+- **Launch the Interactive Menu:**
+  ```bash
+  python src/main.py
+  ```
 - Most scripts save structured JSON and artifacts under `results/`.
 - Detailed usage lives in [commands.md](./commands.md).
 
