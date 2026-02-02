@@ -8,6 +8,7 @@ import re
 import platform
 import uuid
 from datetime import datetime
+from support import results_dir, timestamp
 
 def get_mac_address():
     mac = uuid.getnode()
@@ -148,9 +149,8 @@ def main():
     for device in data['network_neighbors_arp']:
         print(f"IP: {device['ip']} \t MAC: {device['mac']}")
 
-    # Save to results
-    os.makedirs("results", exist_ok=True)
-    filename = f"results/network_info_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+    out_dir = results_dir("network")
+    filename = os.path.join(out_dir, f"network_info_{timestamp()}.json")
     
     with open(filename, 'w') as f:
         json.dump(data, f, indent=4)

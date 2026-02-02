@@ -4,7 +4,7 @@ import json
 import platform
 import socket
 from datetime import datetime
-from support import format_size
+from support import format_size, results_dir, timestamp
 
 try:
     import psutil
@@ -84,11 +84,8 @@ def main():
     print("Gathering device details...")
     data = build_report()
     
-    date_str = datetime.now().strftime("%Y-%m-%d")
-    filename = f"results/device_details_{date_str}.json"
-    
-    # Ensure results directory exists
-    os.makedirs("results", exist_ok=True)
+    out_dir = results_dir("system")
+    filename = os.path.join(out_dir, f"device_details_{timestamp('%Y-%m-%d')}.json")
     
     try:
         with open(filename, "w", encoding="utf-8") as f:

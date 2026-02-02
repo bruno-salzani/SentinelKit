@@ -85,6 +85,7 @@ def main_menu():
         print("  [18] LAN Ping Sweep")
         print("  [19] Banner Grabber")
         print("  [20] System Monitor Logger")
+        print("  [21] GUI Launcher")
         print("  [L] Quick Local Test (Server + Viewer)")
         print("  [0] Exit")
         
@@ -104,7 +105,7 @@ def main_menu():
             else:
                 print("[!] Target IP is required.")
                 time.sleep(1)
-            
+        
         elif choice == '3':
             run_script("system_monitor.py")
             
@@ -123,7 +124,7 @@ def main_menu():
             
         elif choice == '7':
             print("Starting Keylogger with UI in a new window...")
-            run_script("keyboard-inputs.pyw")
+            run_script("keyboard_inputs.pyw")
             
         elif choice == '8':
             print("Starting Remote Desktop Host Server...")
@@ -196,6 +197,9 @@ def main_menu():
             dur = input("Duration seconds (optional): ").strip()
             args = [dur] if dur else []
             run_script("system_monitor_log.py", args)
+        
+        elif choice == '21':
+            run_script("gui_launcher.py")
             
         elif choice == 'l':
             print("Launching Local Session (Server + Viewer)...")

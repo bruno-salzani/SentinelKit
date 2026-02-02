@@ -271,3 +271,66 @@ Log CPU and memory to CSV every second. Optional duration in seconds:
 python src/scripts/system_monitor_log.py
 python src/scripts/system_monitor_log.py 120
 ```
+
+### Service Fingerprint (`service_fingerprint.py`)
+Run port scan and banner grabbing, saving a consolidated report:
+```bash
+python src/scripts/service_fingerprint.py <TARGET> common
+python src/scripts/service_fingerprint.py <TARGET> all
+```
+
+### Task Scheduler (`task_scheduler.py`)
+Create, delete, and list Windows scheduled tasks:
+```bash
+python src/scripts/task_scheduler.py create Sentinel_Ping "python c:\Users\bruno\Desktop\SentinelKit\src\scripts\ping_sweep.py" 10:00 DAILY
+python src/scripts/task_scheduler.py delete Sentinel_Ping
+python src/scripts\task_scheduler.py list
+```
+
+### GUI Launcher (`gui_launcher.py`)
+Graphical interface with buttons and tooltips for all scripts:
+```bash
+python src/scripts/gui_launcher.py
+```
+
+## New UX Features
+
+- Search field: type to filter matching tools; non-matching buttons are disabled.
+- Category headers: tools grouped visually (Network, System, Windows, Web, SSH/SFTP, Utilities).
+- Open Latest Result: opens the most recent file in a chosen subfolder under `results/`.
+
+## JSON Output Schema (Envelope)
+
+- All major outputs now use a common envelope:
+  - `meta`: `{ script, ts, version, host }`
+  - `data`: script-specific payload
+- Example:
+```json
+{
+  "meta": { "script": "tls_cert_inspector", "ts": "20260202_121314", "version": "1.0", "host": "example.com" },
+  "data": { "cert": { "...": "..." }, "expires_in_days": 27 }
+}
+```
+
+## Updated Commands (Argparse)
+
+### SMB Shares Enumerator (`smb_shares_enumerator.py`)
+```bash
+python src/scripts/smb_shares_enumerator.py --host <HOST_OPTIONAL>
+```
+
+### Windows Event Logs Export (`windows_event_export.py`)
+```bash
+python src/scripts/windows_event_export.py --channel System --hours 4 --level Error
+```
+
+### Port Range Profiler (`port_range_profiler.py`)
+```bash
+python src/scripts/port_range_profiler.py <HOST> <START-END> --timeout 1.5
+```
+
+### HTTP Directory Bruteforce (advanced)
+```bash
+python src/scripts/http_directory_bruteforce.py http://example.com 200 --paths "admin/,login/,robots.txt" --concurrency 5 --status 200,301,302,401,403 --timeout 5
+python src/scripts/http_directory_bruteforce.py http://example.com 200 --paths-file @c:\paths.txt
+```

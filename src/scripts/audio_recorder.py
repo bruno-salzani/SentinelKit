@@ -3,13 +3,23 @@ import sys
 import time
 import wave
 import platform
+import subprocess
 from datetime import datetime
-try:
-    import sounddevice as sd
-    import numpy as np
-except Exception:
-    print("sounddevice not found. Install with: pip install sounddevice")
-    sys.exit(1)
+def ensure_sounddevice():
+    try:
+        import sounddevice as sd
+        import numpy as np
+        return sd, np
+    except Exception:
+        try:
+            subprocess.run([sys.executable, "-m", "pip", "install", "sounddevice", "numpy"], check=False)
+            import sounddevice as sd
+            import numpy as np
+            return sd, np
+        except Exception:
+            print("Failed to install sounddevice. Run: pip install sounddevice numpy")
+            sys.exit(1)
+sd, np = ensure_sounddevice()
 
 def main():
     is_windows = platform.system() == "Windows"

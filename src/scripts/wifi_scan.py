@@ -1,7 +1,6 @@
 import subprocess
 import json
-import os
-from datetime import datetime
+from support import results_dir, timestamp
 
 def parse():
     try:
@@ -37,11 +36,8 @@ def parse():
 
 def main():
     data = parse()
-    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    out_dir = os.path.join(root, "results")
-    os.makedirs(out_dir, exist_ok=True)
-    fname = "wifi_networks_{0}.json".format(datetime.now().strftime("%Y%m%d_%H%M%S"))
-    path = os.path.join(out_dir, fname)
+    out_dir = results_dir("wifi")
+    path = os.path.join(out_dir, f"wifi_networks_{timestamp()}.json")
     with open(path, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
     print(path)

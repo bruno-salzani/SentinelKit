@@ -70,10 +70,9 @@ def main():
     q.join()
     dur = time.time() - start
     alive = [r for r in results if r["alive"]]
-    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    out_dir = os.path.join(root, "results")
-    os.makedirs(out_dir, exist_ok=True)
-    path = os.path.join(out_dir, f"ping_sweep_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json")
+    from support import results_dir, timestamp
+    out_dir = results_dir("ping_sweep")
+    path = os.path.join(out_dir, f"ping_sweep_{timestamp()}.json")
     with open(path, "w", encoding="utf-8") as f:
         json.dump({"subnet": base, "duration_s": round(dur, 2), "alive": alive}, f, ensure_ascii=False, indent=2)
     print(path)

@@ -108,8 +108,9 @@ if __name__ == "__main__":
     run_as_admin(args.elevate)
 
     ts = datetime.now().strftime("%Y%m%d_%H%M%S")
-    default_out = args.output or os.path.join("results", f"credentials_{ts}.json")
-    os.makedirs(os.path.dirname(default_out), exist_ok=True)
+    from support import results_dir
+    out_dir = results_dir("credentials")
+    default_out = args.output or os.path.join(out_dir, f"credentials_{ts}.json")
 
     data = {
         "timestamp": ts,

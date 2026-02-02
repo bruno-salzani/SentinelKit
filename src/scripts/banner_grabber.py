@@ -2,7 +2,7 @@ import socket
 import sys
 import json
 import os
-from datetime import datetime
+from support import results_dir, timestamp
 
 def probe(host, port):
     data = ""
@@ -44,10 +44,8 @@ def main():
     out = []
     for port in ports:
         out.append(probe(host, port))
-    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    out_dir = os.path.join(root, "results")
-    os.makedirs(out_dir, exist_ok=True)
-    path = os.path.join(out_dir, "banners_{0}_{1}.json".format(host.replace(":", "_"), datetime.now().strftime("%Y%m%d_%H%M%S")))
+    out_dir = results_dir("banners")
+    path = os.path.join(out_dir, f"banners_{host.replace(':', '_')}_{timestamp()}.json")
     with open(path, "w", encoding="utf-8") as f:
         json.dump({"host": host, "results": out}, f, ensure_ascii=False, indent=2)
     print(path)

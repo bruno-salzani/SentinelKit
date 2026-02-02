@@ -221,8 +221,11 @@ def main():
 
     ip_part = urlparse(base_url).netloc.split(":")[0]
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    default_output = args.output or os.path.join("results", f"router_{ip_part}_{timestamp}.json")
-    dump_dir = os.path.join("results", f"router_{ip_part}_{timestamp}")
+    from support import results_dir
+    base_results = results_dir("router")
+    dump_dir = os.path.join(base_results, f"router_{ip_part}_{timestamp}")
+    os.makedirs(dump_dir, exist_ok=True)
+    default_output = args.output or os.path.join(base_results, f"router_{ip_part}_{timestamp}.json")
 
     details = None
     if args.mode in ("auto", "http"):

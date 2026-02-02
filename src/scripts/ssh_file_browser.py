@@ -187,8 +187,9 @@ def main():
         sftp = client.open_sftp()
         data = list_dir_recursive(sftp, args.remote, max_depth=args.depth, pattern=args.pattern)
         
-        out_path = os.path.join("results", f"listing_{args.host}_{ts}.json")
-        os.makedirs("results", exist_ok=True)
+        from support import results_dir
+        out_dir = results_dir("ssh")
+        out_path = os.path.join(out_dir, f"listing_{args.host}_{ts}.json")
         with open(out_path, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=2, ensure_ascii=False)
         print(f"Conectado com sucesso! Listagem salva em {out_path}")
