@@ -16,8 +16,7 @@ try:
 except Exception:
     ctypes = None
 
-import paramiko
-from paramiko import SSHException
+import support
 
 try:
     from support import format_size
@@ -151,6 +150,10 @@ def resolve_local_defaults(network_file=None):
     return host, user
 
 def main():
+    support.ensure_dependencies(["paramiko"])
+    global paramiko
+    import paramiko
+    
     p = argparse.ArgumentParser(description="List and download files over SSH/SFTP.")
     p.add_argument("host", nargs="?", default=None, help="SSH host")
     p.add_argument("--port", type=int, default=22, help="SSH port")

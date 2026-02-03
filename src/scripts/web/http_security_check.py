@@ -1,5 +1,10 @@
 import argparse
-from support import write_json, http_get, timestamp
+try:
+    from support import write_json, http_get, timestamp
+except Exception:
+    import sys, os
+    sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    from support import write_json, http_get, timestamp
 
 def parse_cookies(headers: dict):
     cookies = []
@@ -20,6 +25,7 @@ def parse_cookies(headers: dict):
     return {"count": len(cookies), "flags": flags}
 
 def main():
+    ensure_dependencies(["requests"])
     ap = argparse.ArgumentParser()
     ap.add_argument("host")
     ap.add_argument("--port", type=int, default=80)
@@ -53,4 +59,5 @@ def main():
     print(path)
 
 if __name__ == "__main__":
-    main()
+    from support import safe_main
+    safe_main(main)

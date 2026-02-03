@@ -4,18 +4,17 @@ import json
 import struct
 import time
 import sys
-import mss
-import numpy as np
-import cv2
-import pyautogui
-from pynput.mouse import Button, Controller as MouseController
-from pynput.keyboard import Key, Controller as KeyboardController
+import support
 from support import VIDEO_PORT, CONTROL_PORT
 
 def start_video_stream(host='0.0.0.0', port=VIDEO_PORT):
     """
     Captures screen and streams it to the connected client.
     """
+    import mss
+    import numpy as np
+    import cv2
+    
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_socket.bind((host, port))
     server_socket.listen(1)
@@ -58,6 +57,9 @@ def handle_control_command(command, mouse, keyboard):
     """
     Executes mouse/keyboard commands received from client.
     """
+    from pynput.mouse import Button
+    from pynput.keyboard import Key
+    
     try:
         cmd_type = command.get('type')
         
@@ -150,4 +152,5 @@ def main():
         sys.exit(0)
 
 if __name__ == "__main__":
+    support.ensure_dependencies(["mss", "numpy", "cv2", "pyautogui", "pynput"])
     main()

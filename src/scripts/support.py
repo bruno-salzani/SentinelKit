@@ -117,3 +117,63 @@ def diff_snapshots(old: dict, new: dict) -> dict:
             if (o.get("size") != n.get("size")) or (o.get("mtime") != n.get("mtime")) or (o.get("sha256") != n.get("sha256")):
                 modified.append({"path": p, "old": o, "new": n})
     return {"added": added, "removed": removed, "modified": modified}
+
+def safe_main(fn):
+    import sys
+    try:
+        fn()
+    except KeyboardInterrupt:
+        print("Operação cancelada pelo usuário")
+        sys.exit(0)
+    except SystemExit as e:
+        raise
+    except Exception as e:
+        print(f"Erro: {e}")
+        sys.exit(1)
+
+def ensure_dependencies(packages: list):
+    import importlib
+    import subprocess
+    import sys
+    
+    # Mapping for packages where import name != pip name
+    PIP_MAPPING = {
+        "cv2": "opencv-python",
+        "PIL": "Pillow",
+        "win32api": "pywin32",
+        "win32con": "pywin32",
+        "win32security": "pywin32",
+        "win32net": "pywin32",
+        "sounddevice": "sounddevice",
+        "pysnmp": "pysnmp",
+        "smbprotocol": "smbprotocol",
+        "cryptography": "cryptography",
+        "paramiko": "paramiko",
+        "requests": "requests",
+        "psutil": "psutil",
+        "pynput": "pynput",
+        "mss": "mss",
+        "numpy": "numpy",
+        "pyautogui": "pyautogui"
+    }
+    
+    missing = []
+    for pkg in packages:
+        # Check if we can import it
+        try:
+            importlib.import_module(pkg)
+        except ImportError:
+            # If import fails, find the pip name
+            pip_name = PIP_MAPPING.get(pkg, pkg)
+            if pip_name not in missing:
+                missing.append(pip_name)
+    
+    if missing:
+        print(f"Instalando dependências ausentes: {', '.join(missing)}...")
+        try:
+            subprocess.check_call([sys.executable, "-m", "pip", "install"] + missing)
+            print("Dependências instaladas com sucesso.")
+        except subprocess.CalledProcessError as e:
+            print(f"Erro ao instalar dependências: {e}")
+            sys.exit(1)
+

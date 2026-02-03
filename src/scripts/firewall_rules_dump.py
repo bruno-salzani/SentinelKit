@@ -25,6 +25,13 @@ def main():
     import json
     with open(path, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
+    try:
+        if os.name == "nt":
+            os.startfile(path)
+        else:
+            subprocess.Popen(["xdg-open", path])
+    except Exception:
+        pass
     print(path)
 
 if __name__ == "__main__":

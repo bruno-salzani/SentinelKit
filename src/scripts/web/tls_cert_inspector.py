@@ -2,15 +2,19 @@ import argparse
 import socket
 import ssl
 from datetime import datetime
-from support import write_json, timestamp
-from typing import List
 try:
-    from cryptography import x509
-    from cryptography.hazmat.backends import default_backend
+    from support import write_json, timestamp, ensure_dependencies
 except Exception:
-    x509 = None
+    import sys, os
+    sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    from support import write_json, timestamp, ensure_dependencies
 
 def main():
+    ensure_dependencies(["cryptography", "requests"])
+    from cryptography import x509
+    from cryptography.hazmat.backends import default_backend
+    from cryptography.x509.oid import AuthorityInformationAccessOID
+
     ap = argparse.ArgumentParser()
     ap.add_argument("host")
     ap.add_argument("--port", type=int, default=443)
@@ -34,38 +38,40 @@ def main():
                     days = (exp_dt - datetime.utcnow()).days
                     data["expires_in_days"] = days
                     data["expiring_soon"] = days <= 30
-                if x509:
+                if x509 and default_backend:
                     try:
                         der = ssock.getpeercert(True)
                         leaf = x509.load_der_x509_certificate(der, default_backend())
                         data["subject"] = leaf.subject.rfc4514_string()
                         data["issuer"] = leaf.issuer.rfc4514_string()
-                        aia = leaf.extensions.get_extension_for_class(x509.AuthorityInformationAccess)
-                        urls = []
-                        for ad in aia.value:
-                            try:
-                                if ad.access_method.dotted_string == x509.AuthorityInformationAccessOID.CA_ISSUERS.dotted_string:
-                                    urls.append(ad.access_location.value)
-                            except Exception:
-                                pass
-                        data["aia_ca_issuers"] = urls
+                        try:
+                            aia = leaf.extensions.get_extension_for_class(x509.AuthorityInformationAccess)
+                            urls = []
+                            for ad in aia.value:
+                                try:
+                                    if AuthorityInformationAccessOID and ad.access_method.dotted_string == AuthorityInformationAccessOID.CA_ISSUERS.dotted_string:
+                                        urls.append(getattr(ad.access_location, "value", None))
+                                except Exception:
+                                    pass
+                            data["aia_ca_issuers"] = urls
+                        except Exception:
+                            pass
                         if args.check_crl:
                             crl_urls = []
                             try:
                                 crldp = leaf.extensions.get_extension_for_class(x509.CRLDistributionPoints)
                                 for dp in crldp.value:
                                     for gn in (dp.full_name or []):
-                                        crl_urls.append(getattr(gn, "value", None))
+                                        v = getattr(gn, "value", None)
+                                        if v:
+                                            crl_urls.append(v)
                             except Exception:
                                 pass
-                            data["crl_distribution_points"] = crl_urls
                             crl_revoked_count = None
                             errors = []
                             if crl_urls:
                                 import requests
                                 for u in crl_urls:
-                                    if not u: 
-                                        continue
                                     try:
                                         r = requests.get(u, timeout=4)
                                         content = r.content
@@ -91,4 +97,5 @@ def main():
     print(path)
 
 if __name__ == "__main__":
-    main()
+    from support import safe_main
+    safe_main(main)

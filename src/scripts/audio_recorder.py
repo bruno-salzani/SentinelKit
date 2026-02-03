@@ -5,23 +5,13 @@ import wave
 import platform
 import subprocess
 from datetime import datetime
-def ensure_sounddevice():
-    try:
-        import sounddevice as sd
-        import numpy as np
-        return sd, np
-    except Exception:
-        try:
-            subprocess.run([sys.executable, "-m", "pip", "install", "sounddevice", "numpy"], check=False)
-            import sounddevice as sd
-            import numpy as np
-            return sd, np
-        except Exception:
-            print("Failed to install sounddevice. Run: pip install sounddevice numpy")
-            sys.exit(1)
-sd, np = ensure_sounddevice()
+import support
 
 def main():
+    support.ensure_dependencies(["sounddevice", "numpy"])
+    import sounddevice as sd
+    import numpy as np
+
     is_windows = platform.system() == "Windows"
     use_kb = False
     if is_windows:

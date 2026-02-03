@@ -20,6 +20,8 @@ def list_cameras(limit=10):
     return cameras
 
 def main():
+    support.ensure_dependencies(["cv2"])
+    import cv2
     cameras = list_cameras()
     
     if not cameras:

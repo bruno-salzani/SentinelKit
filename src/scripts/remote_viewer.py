@@ -164,4 +164,5 @@ def main():
     control_thread.join()
 
 if __name__ == "__main__":
+    support.ensure_dependencies(["cv2", "numpy"])
     main()

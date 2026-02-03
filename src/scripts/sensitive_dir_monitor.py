@@ -31,4 +31,5 @@ def main():
     print(path)
 
 if __name__ == "__main__":
-    main()
+    from support import safe_main
+    safe_main(main)

@@ -55,4 +55,5 @@ def main():
     restore_router_backup(args.host, args.username, password, args.backup_file)
 
 if __name__ == "__main__":
+    support.ensure_dependencies(["paramiko"])
     main()

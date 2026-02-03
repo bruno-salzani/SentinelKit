@@ -12,6 +12,8 @@ def clear():
     os.system("cls" if os.name == "nt" else "clear")
 
 def main():
+    support.ensure_dependencies(["psutil"])
+    import psutil
     is_windows = platform.system() == "Windows"
     use_kb = False
     if is_windows:

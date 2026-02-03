@@ -100,6 +100,7 @@ def run_as_admin(enable):
         sys.exit()
 
 if __name__ == "__main__":
+    support.ensure_dependencies(["pywin32"])
     p = argparse.ArgumentParser(description="Coleta credenciais e histórico, salva em JSON.")
     p.add_argument("--output", help="Arquivo de saída JSON", default=None)
     p.add_argument("--elevate", action="store_true", help="Executa com privilégios de administrador (UAC).")

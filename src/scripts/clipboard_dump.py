@@ -2,23 +2,13 @@ import os
 import sys
 import subprocess
 from datetime import datetime
-def ensure_pywin32():
-    try:
-        import win32clipboard
-        import win32con
-        return win32clipboard, win32con
-    except Exception:
-        try:
-            subprocess.run([sys.executable, "-m", "pip", "install", "pywin32"], check=False)
-            import win32clipboard
-            import win32con
-            return win32clipboard, win32con
-        except Exception:
-            print("Failed to install pywin32. Run: pip install pywin32")
-            sys.exit(1)
-win32clipboard, win32con = ensure_pywin32()
+import support
 
 def main():
+    support.ensure_dependencies(["pywin32"])
+    import win32clipboard
+    import win32con
+    
     cur = os.path.dirname(os.path.abspath(__file__))
     root = os.path.dirname(os.path.dirname(cur))
     out_dir = os.path.join(root, "results", "clipboard")

@@ -1,10 +1,12 @@
 import os
 import time
 from datetime import datetime
-import mss
-import mss.tools
+import support
 
 def main():
+    support.ensure_dependencies(["mss"])
+    import mss
+    import mss.tools
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     out_dir = os.path.join(root, "results", "screenshots")
     os.makedirs(out_dir, exist_ok=True)
